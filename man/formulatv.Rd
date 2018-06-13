@@ -9,9 +9,9 @@ formulatv(ruta, finicio, ffinal)
 \arguments{
 \item{ruta}{The path where you want to create the csv file}
 
-\item{finicio}{The date from which you want to scrap}
+\item{finicio}{The date from which you want to scrap. Must be in "YYYY-MM-DD" format.}
 
-\item{ffinal}{The date until you want to scrap}
+\item{ffinal}{The date until you want to scrap. Must be in "YYYY-MM-DD" format.}
 }
 \value{
 A data frame will be imported to your workspace and a csv file will be generated in the specified path

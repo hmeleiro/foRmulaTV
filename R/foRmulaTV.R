@@ -1,11 +1,11 @@
 #' Scraps formulatv.com and downloads spanish TV audience data
 #'
 #' @param ruta The path where you want to create the csv file
-#' @param finicio The date from which you want to scrap
-#' @param ffinal The date until you want to scrap
+#' @param finicio The date from which you want to scrap. Must be in "YYYY-MM-DD" format.
+#' @param ffinal The date until you want to scrap. Must be in "YYYY-MM-DD" format.
 #'
-#' @importFrom readr readr::write_csv
-#' @importFrom  readr readr::read_csv
+#' @importFrom readr write_csv
+#' @importFrom  readr read_csv
 #' @import stringr
 #' @import xml2
 #' @import rvest
@@ -97,13 +97,13 @@ formulatv <- function(ruta, finicio, ffinal) {
                         Franja = NA)
 
     lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "telediario|noticias|informativos|teled.") == TRUE] <- "Noticias"
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "operación triunfo|operacion triunfo") == TRUE] <- "OT"
+    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "operaci\u00F3n triunfo|operacion triunfo") == TRUE] <- "OT"
     lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "hormiguero") == TRUE] <- "El Hormiguero"
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "fútbol|futbol|champions") == TRUE] <- "Fútbol"
+    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "f\u00FAtbol|futbol|champions") == TRUE] <- "F\u00FAtbol"
     lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "sexta noche|noche en 24h|objetivo de ana pastor") == TRUE] <- "Tertulia"
     lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "la voz") == TRUE] <- "La Voz"
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "pelicul|cine|sesion de tarde|sesión de tarde") == TRUE] <- "Cine"
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "salvame|sálvame") == TRUE] <- "Sálvame"
+    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "pelicul|cine|sesion de tarde|sesi\u00F3n de tarde") == TRUE] <- "Cine"
+    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "salvame|s\u00E1lvame") == TRUE] <- "S\u00E1lvame"
     lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "salvados") == TRUE] <- "Salvados"
     lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "pasapalabra") == TRUE] <- "Pasapalabra"
     lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "goya") == TRUE] <- paste("Los Goya", format(lines$Fecha[p], "%Y"))
@@ -111,7 +111,7 @@ formulatv <- function(ruta, finicio, ffinal) {
 
 
     lines$Franja[format(lines$Inicio, '%H:%M') >= "02:30" & format(lines$Inicio, '%H:%M') < "07:00"] <- "Madrugada"
-    lines$Franja[format(lines$Inicio, '%H:%M') >= "07:00" & format(lines$Inicio, '%H:%M') < "14:00"] <- "Mañana"
+    lines$Franja[format(lines$Inicio, '%H:%M') >= "07:00" & format(lines$Inicio, '%H:%M') < "14:00"] <- "Ma\u00F1ana"
     lines$Franja[format(lines$Inicio, '%H:%M') >= "14:00" & format(lines$Inicio, '%H:%M') < "17:00"] <- "Sobremesa"
     lines$Franja[format(lines$Inicio, '%H:%M') >= "17:00" & format(lines$Inicio, '%H:%M') < "20:30"] <- "Tarde"
     lines$Franja[format(lines$Inicio, '%H:%M') >= "20:30" & format(lines$Inicio, '%H:%M') < "23:59"] <- "Prime Time"
@@ -119,7 +119,7 @@ formulatv <- function(ruta, finicio, ffinal) {
 
 
 
-    lines$Franja <- factor(x = lines$Franja, levels = c("Madrugada", "Mañana", "Sobremesa", "Tarde", "Prime Time", "Late Night"))
+    lines$Franja <- factor(x = lines$Franja, levels = c("Madrugada", "Ma\u00F1ana", "Sobremesa", "Tarde", "Prime Time", "Late Night"))
     lines$Inicio <- format(lines$Inicio,"%H:%M")
 
     print(lines)
@@ -133,6 +133,7 @@ formulatv <- function(ruta, finicio, ffinal) {
   diff <- stop - start
   print(diff)
 
-  audiencias <<- readr::read_csv(ruta)
+  audiencias <- readr::read_csv(ruta)
+  audiencias <<- audiencias
 
 }
