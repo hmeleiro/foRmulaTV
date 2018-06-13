@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Héctor Meleiro <hmeleiros@gmail.com>
 Maintainer: Héctor Meleiro <hmeleiros@gmail.com>
 Depends: R (>= 3.1.0)
-Imports: httr, rvest, tidyverse, xml2
+Imports: httr, rvest, readr, stringr, xml2
 Description: FoRmulaTV is a simple web scraper for downloading spanish tv audience data from formulatv.com.
 License: GPL-3
 Encoding: UTF-8

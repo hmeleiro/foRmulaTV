@@ -4,7 +4,9 @@
 #' @param finicio The date from which you want to scrap
 #' @param ffinal The date until you want to scrap
 #'
-#' @import tidyverse
+#' @importFrom readr write_csv
+#' @importFrom  readr read_csv
+#' @import stringr
 #' @import xml2
 #' @import rvest
 #' @import httr

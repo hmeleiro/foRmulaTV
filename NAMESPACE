@@ -3,5 +3,7 @@
 export(formulatv)
 import(httr)
 import(rvest)
-import(tidyverse)
+import(stringr)
 import(xml2)
+importFrom(readr,read_csv)
+importFrom(readr,write_csv)
