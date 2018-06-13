@@ -4,8 +4,8 @@
 #' @param finicio The date from which you want to scrap
 #' @param ffinal The date until you want to scrap
 #'
-#' @importFrom readr write_csv
-#' @importFrom  readr read_csv
+#' @importFrom readr readr::write_csv
+#' @importFrom  readr readr::read_csv
 #' @import stringr
 #' @import xml2
 #' @import rvest
@@ -46,7 +46,7 @@ formulatv <- function(ruta, finicio, ffinal) {
                       "Tema",
                       "Franja")
 
-  write_csv(x = lines, path = ruta, append = FALSE, col_names = FALSE)
+  readr::write_csv(x = lines, path = ruta, append = FALSE, col_names = FALSE)
 
 
 
@@ -123,7 +123,7 @@ formulatv <- function(ruta, finicio, ffinal) {
     lines$Inicio <- format(lines$Inicio,"%H:%M")
 
     print(lines)
-    write_csv(x = lines, path = ruta, append = TRUE, col_names = FALSE)
+    readr::write_csv(x = lines, path = ruta, append = TRUE, col_names = FALSE)
 
     process <- (p/length(links))*100
     print(paste0("Proceso: ", round(process, digits = 1), "%"))
@@ -133,6 +133,6 @@ formulatv <- function(ruta, finicio, ffinal) {
   diff <- stop - start
   print(diff)
 
-  audiencias <<- read_csv(ruta)
+  audiencias <<- readr::read_csv(ruta)
 
 }
