@@ -58,7 +58,7 @@ formulatv <- function(ruta, finicio, ffinal) {
     canal <- x %>% read_html() %>% html_nodes(".taud")
     canal <- canal[-1]
 
-    canal <- as.character(str_extract(string = canal, pattern = "la1|la2|antena3|telecinco|lasexta|cuatro|beIN Sports"))
+    canal <- str_extract(string = as.character(canal), pattern = "la1|la2|antena3|telecinco|lasexta|cuatro|beIN Sports")
     canal[canal == "la1"] <- "La 1"
     canal[canal == "la2"] <- "La 2"
     canal[canal == "antena3"] <- "Antena 3"
