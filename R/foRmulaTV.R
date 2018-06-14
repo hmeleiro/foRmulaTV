@@ -136,6 +136,9 @@ formulatv <- function(ruta, finicio, ffinal) {
                                         Franja = NA),
              error=function(e) { message(paste("Error el día", fechas[p], ".", paste0("http://www.formulatv.com/audiencias/", fechas[p])))})
 
+
+    df$Canal <- as.character(df$Canal)
+
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "telediario|noticias|informativos|teled.") == TRUE] <- "Noticias", silent = TRUE)
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "operaci\u00F3n triunfo|operacion triunfo") == TRUE] <- "OT", silent = TRUE)
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "hormiguero") == TRUE] <- "El Hormiguero", silent = TRUE)
