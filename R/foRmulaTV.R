@@ -69,8 +69,11 @@ formulatv <- function(ruta, finicio, ffinal) {
     canal[length(canal) == 0] <- NA
 
     # Apaño para el dia 2012-04-25
-    if (bloque[9] == "") {
-      bloque[9] <- NA
+
+    if (!is.na(bloque[9])) {
+      if (bloque[9] == "") {
+        bloque[9] <- NA
+      }
     }
     ##
 
@@ -175,5 +178,4 @@ formulatv <- function(ruta, finicio, ffinal) {
 
   audiencias <- readr::read_csv(ruta)
   audiencias <<- audiencias
-
 }
