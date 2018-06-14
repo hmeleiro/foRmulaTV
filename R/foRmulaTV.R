@@ -35,7 +35,7 @@ formulatv <- function(ruta, finicio, ffinal) {
 
   links <- paste0("http://www.formulatv.com/audiencias/", fechas)
 
-  lines <- data.frame("Canal",
+  df <- data.frame("Canal",
                       "Programa",
                       "Inicio",
                       "Duracion",
@@ -46,7 +46,7 @@ formulatv <- function(ruta, finicio, ffinal) {
                       "Tema",
                       "Franja")
 
-  readr::write_csv(x = lines, path = ruta, append = FALSE, col_names = FALSE)
+  readr::write_csv(x = df, path = ruta, append = FALSE, col_names = FALSE)
 
 
 
@@ -73,60 +73,92 @@ formulatv <- function(ruta, finicio, ffinal) {
     remove <- " "
     bloque <- bloque[-1]
 
+    programa <- bloque[seq(from = 6, to = 126, by = 5)]
+
+    if (length(programa) > length(canal)) {
+      programa <- programa[!is.na(programa)]
+    }
+
     share <- str_replace(string = bloque[seq(from = 10, to = 130, by = 5)], pattern = "%", replacement = "")
     share <- str_replace(string = share, pattern = ",", replacement = ".")
 
+    if (length(share) > length(canal)) {
+      share <- share[!is.na(share)]
+    }
 
     espectadores <- as.numeric(str_replace_all(string = bloque[seq(from = 9, to = 129, by = 5)], pattern = "\\.", ""))
 
+    if (length(espectadores) > length(canal)) {
+      espectadores <- espectadores[!is.na(espectadores)]
+    }
+
     inicio <- as.POSIXct(x = paste(fechas[p], bloque[seq(from = 7, to = 127, by = 5)]), format = "%Y-%m-%d %H:%M")
-    fecha_hora <- as.POSIXct(x = paste(fechas[p], bloque[seq(from = 7, to = 127, by = 5)]), format = "%Y-%m-%d %H:%M")
-
-    duracion <- as.numeric(str_replace(string = bloque[seq(from = 8, to = 128, by = 5)], pattern = " min.", replacement = ""))
-
-
-    lines <- data.frame(Canal = canal,
-                        Programa = bloque[seq(from = 6, to = 126, by = 5)],
-                        Inicio = inicio,
-                        Duracion =duracion,
-                        Espectadores =espectadores,
-                        Share = share,
-                        Fecha = fechas[p],
-                        Fecha_hora = fecha_hora,
-                        Tema = NA,
-                        Franja = NA)
-
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "telediario|noticias|informativos|teled.") == TRUE] <- "Noticias"
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "operaci\u00F3n triunfo|operacion triunfo") == TRUE] <- "OT"
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "hormiguero") == TRUE] <- "El Hormiguero"
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "f\u00FAtbol|futbol|champions") == TRUE] <- "F\u00FAtbol"
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "sexta noche|noche en 24h|objetivo de ana pastor") == TRUE] <- "Tertulia"
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "la voz") == TRUE] <- "La Voz"
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "pelicul|cine|sesion de tarde|sesi\u00F3n de tarde") == TRUE] <- "Cine"
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "salvame|s\u00E1lvame") == TRUE] <- "S\u00E1lvame"
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "salvados") == TRUE] <- "Salvados"
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "pasapalabra") == TRUE] <- "Pasapalabra"
-    lines$Tema[str_detect(string = tolower(lines$Programa), pattern = "goya") == TRUE] <- paste("Los Goya", format(lines$Fecha[p], "%Y"))
+    if (length(inicio) > length(canal)) {
+      inicio <- inicio[!is.na(inicio)]
+    }
 
 
+    hora <- bloque[seq(from = 7, to = 127, by = 5)]
+    try(hora[nchar(hora) != 5] <- paste0(hora[nchar(hora) != 5], "0"), silent = TRUE)
 
-    lines$Franja[format(lines$Inicio, '%H:%M') >= "02:30" & format(lines$Inicio, '%H:%M') < "07:00"] <- "Madrugada"
-    lines$Franja[format(lines$Inicio, '%H:%M') >= "07:00" & format(lines$Inicio, '%H:%M') < "14:00"] <- "Ma\u00F1ana"
-    lines$Franja[format(lines$Inicio, '%H:%M') >= "14:00" & format(lines$Inicio, '%H:%M') < "17:00"] <- "Sobremesa"
-    lines$Franja[format(lines$Inicio, '%H:%M') >= "17:00" & format(lines$Inicio, '%H:%M') < "20:30"] <- "Tarde"
-    lines$Franja[format(lines$Inicio, '%H:%M') >= "20:30" & format(lines$Inicio, '%H:%M') < "23:59"] <- "Prime Time"
-    lines$Franja[format(lines$Inicio, '%H:%M') >= "00:00" & format(lines$Inicio, '%H:%M') < "02:30"] <- "Late Night"
+    fecha_hora <- as.POSIXct(x = paste(fechas[p], hora), format = "%Y-%m-%d %H:%M")
+
+    if (length(fecha_hora) > length(canal)) {
+      fecha_hora <- fecha_hora[!is.na(fecha_hora)]
+    }
+
+    duracion <- as.numeric(str_remove_all(string = bloque[seq(from = 8, to = 128, by = 5)], pattern = " min."))
+
+    if (length(duracion) > length(canal)) {
+      duracion <- duracion[!is.na(duracion)]
+    }
+
+
+    tryCatch(expr = df <- data.frame(Canal = canal,
+                                        Programa = programa,
+                                        Inicio = inicio,
+                                        Duracion =duracion,
+                                        Espectadores =espectadores,
+                                        Share = share,
+                                        Fecha = fechas[p],
+                                        Fecha_hora = fecha_hora,
+                                        Tema = NA,
+                                        Franja = NA),
+             error=function(e) { message(paste("Error el día", fechas[p], ".", paste0("http://www.formulatv.com/audiencias/", fechas[p])))})
+
+    try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "telediario|noticias|informativos|teled.") == TRUE] <- "Noticias", silent = TRUE)
+    try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "operaci\u00F3n triunfo|operacion triunfo") == TRUE] <- "OT", silent = TRUE)
+    try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "hormiguero") == TRUE] <- "El Hormiguero", silent = TRUE)
+    try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "f\u00FAtbol|futbol|champions") == TRUE] <- "F\u00FAtbol", silent = TRUE)
+    try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "sexta noche|noche en 24h|objetivo de ana pastor") == TRUE] <- "Tertulia", silent = TRUE)
+    try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "la voz") == TRUE] <- "La Voz", silent = TRUE)
+    try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "pelicul|cine|sesion de tarde|sesi\u00F3n de tarde") == TRUE] <- "Cine", silent = TRUE)
+    try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "salvame|s\u00E1lvame") == TRUE] <- "S\u00E1lvame", silent = TRUE)
+    try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "salvados") == TRUE] <- "Salvados", silent = TRUE)
+    try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "pasapalabra") == TRUE] <- "Pasapalabra", silent = TRUE)
+    try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "goya") == TRUE] <- paste("Los Goya", format(df$Fecha[p], "%Y")), silent = TRUE)
 
 
 
-    lines$Franja <- factor(x = lines$Franja, levels = c("Madrugada", "Ma\u00F1ana", "Sobremesa", "Tarde", "Prime Time", "Late Night"))
-    lines$Inicio <- format(lines$Inicio,"%H:%M")
+    try(df$Franja[format(df$Inicio, '%H:%M') >= "02:30" & format(df$Inicio, '%H:%M') < "07:00"] <- "Madrugada", silent = TRUE)
+    try(df$Franja[format(df$Inicio, '%H:%M') >= "07:00" & format(df$Inicio, '%H:%M') < "14:00"] <- "Ma\u00F1ana", silent = TRUE)
+    try(df$Franja[format(df$Inicio, '%H:%M') >= "14:00" & format(df$Inicio, '%H:%M') < "17:00"] <- "Sobremesa", silent = TRUE)
+    try(df$Franja[format(df$Inicio, '%H:%M') >= "17:00" & format(df$Inicio, '%H:%M') < "20:30"] <- "Tarde", silent = TRUE)
+    try(df$Franja[format(df$Inicio, '%H:%M') >= "20:30" & format(df$Inicio, '%H:%M') < "23:59"] <- "Prime Time", silent = TRUE)
+    try(df$Franja[format(df$Inicio, '%H:%M') >= "00:00" & format(df$Inicio, '%H:%M') < "02:30"] <- "Late Night", silent = TRUE)
 
-    print(lines)
-    readr::write_csv(x = lines, path = ruta, append = TRUE, col_names = FALSE)
+
+
+    try(df$Franja <- factor(x = df$Franja, levels = c("Madrugada", "Ma\u00F1ana", "Sobremesa", "Tarde", "Prime Time", "Late Night")), silent = TRUE)
+    try(df$Inicio <- format(df$Inicio,"%H:%M"), silent = TRUE)
+
+    try(print(df), silent = TRUE)
+    try(readr::write_csv(x = df, path = ruta, append = TRUE, col_names = FALSE), silent = TRUE)
 
     process <- (p/length(links))*100
     print(paste0("Proceso: ", round(process, digits = 1), "%"))
+
+    df <- NA
 
   }
   stop <- Sys.time()
