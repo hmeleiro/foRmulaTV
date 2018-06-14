@@ -139,7 +139,7 @@ formulatv <- function(ruta, finicio, ffinal) {
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "telediario|noticias|informativos|teled.") == TRUE] <- "Noticias", silent = TRUE)
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "operaci\u00F3n triunfo|operacion triunfo") == TRUE] <- "OT", silent = TRUE)
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "hormiguero") == TRUE] <- "El Hormiguero", silent = TRUE)
-    try(df$Canal[df$Programa == "El Hormiguero"] <- "Antena 3", silent = TRUE)
+    try(df$Canal[df$Tema == "El Hormiguero"] <- "Antena 3", silent = TRUE)
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "f\u00FAtbol|futbol|champions") == TRUE] <- "F\u00FAtbol", silent = TRUE)
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "sexta noche|noche en 24h|objetivo de ana pastor") == TRUE] <- "Tertulia", silent = TRUE)
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "la voz") == TRUE] <- "La Voz", silent = TRUE)
