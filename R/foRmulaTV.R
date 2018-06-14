@@ -58,14 +58,21 @@ formulatv <- function(ruta, finicio, ffinal) {
     canal <- x %>% read_html() %>% html_nodes(".taud")
     canal <- canal[-1]
 
-    canal <- str_extract(string = as.character(canal), pattern = "la1|la2|antena3|telecinco|lasexta|cuatro|beIN Sports")
+    canal <- str_extract(string = as.character(canal), pattern = "la1|la2|antena3|telecinco|lasexta|cuatro|beIN Sports|Autonómicas")
     canal[canal == "la1"] <- "La 1"
     canal[canal == "la2"] <- "La 2"
     canal[canal == "antena3"] <- "Antena 3"
     canal[canal == "telecinco"] <- "Telecinco"
     canal[canal == "lasexta"] <- "La Sexta"
     canal[canal == "cuatro"] <- "Cuatro"
+    canal[canal == "Autonómicas"] <- "Autonómicas"
     canal[length(canal) == 0] <- NA
+
+    # Apaño para el dia 2012-04-25
+    if (bloque[9] == "") {
+      bloque[9] <- NA
+    }
+    ##
 
 
     remove <- ""
@@ -129,6 +136,7 @@ formulatv <- function(ruta, finicio, ffinal) {
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "telediario|noticias|informativos|teled.") == TRUE] <- "Noticias", silent = TRUE)
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "operaci\u00F3n triunfo|operacion triunfo") == TRUE] <- "OT", silent = TRUE)
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "hormiguero") == TRUE] <- "El Hormiguero", silent = TRUE)
+    try(df$Canal[df$Programa == "El Hormiguero"] <- "Antena 3", silent = TRUE)
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "f\u00FAtbol|futbol|champions") == TRUE] <- "F\u00FAtbol", silent = TRUE)
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "sexta noche|noche en 24h|objetivo de ana pastor") == TRUE] <- "Tertulia", silent = TRUE)
     try(df$Tema[str_detect(string = tolower(df$Programa), pattern = "la voz") == TRUE] <- "La Voz", silent = TRUE)
