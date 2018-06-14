@@ -17,3 +17,15 @@ library(FoRmulaTV)  # Load the package
 
 formulatv("VALID-PATH-IN-YOUR-COMPUTER", "2018-01-05", "2018-01-31") # Run the function
 ```
+
+
+# Examples of usage
+
+![Image of news audience](https://github.com/meneos/foRmulaTV/blob/master/graphs/audiencias%20telediarios.png)
+
+
+![Image of El Objetivo](https://github.com/meneos/foRmulaTV/blob/master/graphs/el%20objetivo.png)
+
+![Image](https://github.com/meneos/foRmulaTV/blob/master/graphs/OT.jpeg)
+
+![Image](https://github.com/meneos/foRmulaTV/blob/master/graphs/salvados_i%C3%B1igo.png)
